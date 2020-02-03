@@ -1,0 +1,59 @@
+Vue
+    Appel au modèle et au contrôleur
+    Affichage des données sur les employés
+
+
+Contrôleur (classe Employes avec héritage de la classe DB )
+    Conception de la requête ici SELECT
+
+Modèle (classe DB )
+    Connexion à la base de données
+    Exécution de la requête
+
+
+    _________                   _____________
+    |       |                   |           |
+    | VUE   |   ---------- >    |  Modèle   |
+    |       |                   |           |
+    ---------                   -------------
+        |
+        |                       _____________
+        ----------------->      |           |
+                                | Contrôle  |
+                                |           |
+                                -------------
+
+________________________  Modèle  ________________________ 
+
+<?php
+// Connexion à la BASE DE DONNÉES
+class DB {
+  private $cnx = null;
+  private $resultat = null;
+
+  function __construct(){
+
+      $this->cnx = new PDO("mysql:host=localhost;dbname=db_projet;charset=utf8", "btssio", "btssio" );
+  }
+
+  // Exécution de la requête préparée
+  // La fonction peut être appelée plusieurs fois.
+  function getRequete($strSQL){
+    $this->resultat = $this->cnx->prepare($strSQL);
+    $this->resultat->execute();
+    return $this->resultat->fetchAll();
+  }
+}
+
+// ________________________  Contrôleur  ________________________ 
+
+class Employes extends DB {
+    function getSelect(){
+      return $this->getRequete("SELECT * FROM `tbl_employe`");
+    }
+  }
+
+?>
+
+
+// ________________________  Vue  ________________________ 
